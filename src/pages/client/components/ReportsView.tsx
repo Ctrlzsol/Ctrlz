@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FileText, CheckCircle, AlertTriangle, X, Printer, ClipboardList, ArrowRight, Layers, Check, Zap, Shield, TrendingUp, Building2, Calendar, User, Server, Database, FileBarChart, AlertOctagon, Clock, Activity, FileCheck, HardDrive, Cpu, Radio, Search, Wrench, ServerOff, CloudOff, Share2 } from 'lucide-react';
 import { Report } from '../../../core/types';
@@ -12,13 +13,16 @@ interface ReportsViewProps {
 const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ report, onClose }) => {
     const { customLogoData } = useLogo();
     
+    // SAFE DATA EXTRACTION & MAPPING
     const content = (report.content || {}) as any;
     const score = content.healthScore || 0;
     
+    // TYPE CHECKING
     const isVisitLog = report.type === 'visit_log';
     const isMonthly = report.type === 'monthly_technical';
     const isIncident = report.type === 'incident';
 
+    // Helper to split text into list items
     const parseList = (text: any) => {
         if (!text) return [];
         if (typeof text !== 'string') return []; 
@@ -30,10 +34,12 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
     const warningsList = parseList(content.warnings);
     const pendingList = parseList(content.pendingTasks);
 
+    // New License Parsing
     const activeLicenses = parseList(content.licenseActive);
     const expiringLicenses = parseList(content.licenseExpiring);
     const expiredLicenses = parseList(content.licenseExpired);
 
+    // MAPPINGS (Ensure keys match ReportGenerator output)
     const sysStatusMap: Record<string, { label: string, color: string, icon: any }> = { 
         stable: { label: 'مستقر', color: 'text-emerald-600 bg-emerald-50', icon: CheckCircle }, 
         unstable: { label: 'غير مستقر', color: 'text-orange-600 bg-orange-50', icon: Activity }, 
@@ -55,7 +61,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
 
     const handleWhatsAppShare = () => {
         const confirmMsg = "لمشاركة التقرير كملف PDF، يجب أولاً تحميله (طباعة -> حفظ كـ PDF) ثم إرساله يدوياً عبر واتساب.\n\nهل ترغب بفتح واتساب الآن؟";
-        if (window.confirm(confirmMsg)) {
+        if (confirm.apply(null, [confirmMsg] as any)) {
              window.open(`https://wa.me/`, '_blank');
         }
     };
@@ -64,6 +70,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
 
     return (
         <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex justify-center overflow-y-auto">
+            {/* FIXED CONTROLS */}
             <div className="fixed top-6 left-6 flex gap-4 print:hidden z-[210]">
                 <button onClick={handlePrint} className="bg-[#0c2444] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#0a1f3b] transition-all flex items-center gap-2 cursor-pointer">
                     <Printer size={18} /> طباعة / PDF
@@ -76,12 +83,16 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                 </button>
             </div>
 
+            {/* A4 PAPER CONTAINER */}
             <div className="min-h-full w-full flex items-start justify-center p-4 py-20 print:p-0 print:py-0 print:block">
                 <div className="transform scale-[0.85] origin-top shadow-2xl print:scale-100 print:shadow-none print:transform-none">
                     <div id="invoice-print-area" className="bg-[#fcfcfc] w-[210mm] min-h-[297mm] h-auto relative shadow-2xl mx-auto text-[#1e293b] font-sans flex flex-col overflow-hidden print:w-full print:h-auto print:absolute print:top-0 print:left-0 print:m-0" dir="rtl">
+                        
+                        {/* 1. HEADER SECTION */}
                         <div className="p-12 pb-6 bg-white relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#0c2444] to-[#0071e3]"></div>
                             <div className="flex justify-between items-start mb-12 relative z-10">
+                                {/* Left: Logo */}
                                 <div className="w-1/3">
                                     {customLogoData ? (
                                         <img src={customLogoData} alt="Logo" className="max-h-24 object-contain object-right" />
@@ -90,6 +101,8 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                     )}
                                     <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-[0.2em] font-bold">IT Ecosystem & Support</p>
                                 </div>
+
+                                {/* Right: Report Title */}
                                 <div className="w-2/3 text-left flex flex-col items-end">
                                     <div className="flex items-center gap-3 mb-3">
                                         <span className="text-[10px] font-mono text-gray-400 uppercase">REF: {report.id.substring(0, 8).toUpperCase()}</span>
@@ -104,6 +117,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                 </div>
                             </div>
 
+                            {/* Metadata Row */}
                             <div className="bg-[#f8fafc] rounded-2xl p-6 grid grid-cols-4 gap-4 border border-gray-100">
                                 <div>
                                     <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">العميل</p>
@@ -133,9 +147,11 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                             </div>
                         </div>
 
+                        {/* 2. CREATIVE STATUS INDICATORS (Only for Monthly/Visit Reports) */}
                         {!isIncident && (
                             <div className="px-12 py-4">
                                 <div className="grid grid-cols-4 gap-6">
+                                    {/* Score Circular Infographic */}
                                     <div className="col-span-1 flex flex-col items-center justify-center">
                                         <div className="relative w-36 h-36 flex items-center justify-center">
                                             <div className="absolute inset-0 rounded-full" style={{ background: `conic-gradient(#0071e3 ${score}%, #e2e8f0 0)` }}></div>
@@ -146,6 +162,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                         </div>
                                     </div>
 
+                                    {/* Server Status */}
                                     <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex flex-col justify-center items-center text-center relative overflow-hidden">
                                         <div className={`absolute top-0 left-0 w-full h-1 ${sysStatusMap[content.system_status]?.color.split(' ')[0].replace('text-', 'bg-') || 'bg-gray-400'}`}></div>
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${sysStatusMap[content.system_status]?.color || 'bg-gray-100 text-gray-500'}`}>
@@ -155,6 +172,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                         <h4 className="text-lg font-black text-[#0c2444]">{sysStatusMap[content.system_status]?.label || content.system_status}</h4>
                                     </div>
 
+                                    {/* Backup Status */}
                                     <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex flex-col justify-center items-center text-center relative overflow-hidden">
                                         <div className={`absolute top-0 left-0 w-full h-1 ${backupStatusMap[content.backup_status]?.color.split(' ')[0].replace('text-', 'bg-') || 'bg-gray-400'}`}></div>
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${backupStatusMap[content.backup_status]?.color || 'bg-gray-100 text-gray-500'}`}>
@@ -164,6 +182,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                         <h4 className="text-lg font-black text-[#0c2444]">{backupStatusMap[content.backup_status]?.label || content.backup_status}</h4>
                                     </div>
 
+                                    {/* Efficiency */}
                                     <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex flex-col justify-center items-center text-center relative overflow-hidden">
                                         <div className={`absolute top-0 left-0 w-full h-1 ${content.efficiency === 'high' ? 'bg-blue-500' : 'bg-gray-400'}`}></div>
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${content.efficiency === 'high' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-500'}`}>
@@ -176,8 +195,13 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                             </div>
                         )}
 
+                        {/* 3. MAIN CONTENT (Split) */}
                         <div className="px-12 py-6 grid grid-cols-12 gap-8 flex-1">
+                            
+                            {/* LEFT COLUMN (Recs & Details) */}
                             <div className="col-span-5 space-y-6">
+                                
+                                {/* Recommendations */}
                                 {((notesList.length > 0) || (content.prevention)) && (
                                     <div className="bg-[#fffbeb] rounded-[2rem] p-8 border border-[#fef3c7] relative overflow-hidden">
                                         <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#fcd34d] opacity-20 rounded-full"></div>
@@ -201,6 +225,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                     </div>
                                 )}
 
+                                {/* Pending Tasks (If any) */}
                                 {pendingList.length > 0 && (
                                     <div className="bg-gray-50 rounded-[2rem] p-8 border border-gray-200">
                                         <h3 className="text-sm font-black text-gray-500 mb-4 flex items-center gap-2">
@@ -216,9 +241,13 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                         </ul>
                                     </div>
                                 )}
+
                             </div>
 
+                            {/* RIGHT COLUMN (Tasks & Achievements) */}
                             <div className="col-span-7 space-y-8">
+                                
+                                {/* A. Tasks / Achievements - HIDDEN FOR INCIDENTS */}
                                 {(!isIncident && (isVisitLog || isMonthly)) && (
                                     <div>
                                         <h3 className="text-xl font-bold text-[#0c2444] mb-6 flex items-center gap-3">
@@ -248,6 +277,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                     </div>
                                 )}
 
+                                {/* B. Incident Details (If Incident) */}
                                 {isIncident && (
                                     <div>
                                         <h3 className="text-xl font-bold text-red-700 mb-6 flex items-center gap-3">
@@ -276,6 +306,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                     </div>
                                 )}
 
+                                {/* LICENSES SECTION (Detailed for Print) */}
                                 {!isIncident && (activeLicenses.length > 0 || expiringLicenses.length > 0 || expiredLicenses.length > 0) && (
                                     <div className="bg-white rounded-[2rem] p-6 border border-gray-200 mt-6 shadow-sm">
                                         <h3 className="font-bold text-[#0c2444] text-sm border-b border-gray-100 pb-3 mb-4 flex items-center gap-2">
@@ -310,6 +341,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                     </div>
                                 )}
 
+                                {/* Warnings if any */}
                                 {warningsList.length > 0 && (
                                     <div className="bg-red-50 rounded-[2rem] p-6 border border-red-100 mt-6">
                                         <h3 className="font-bold text-red-800 text-sm mb-4 flex items-center gap-2">
@@ -325,9 +357,11 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                         </ul>
                                     </div>
                                 )}
+
                             </div>
                         </div>
 
+                        {/* Footer */}
                         <div className="mt-auto bg-[#0c2444] text-white p-8 flex justify-between items-center relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#0071e3] opacity-20 rounded-full blur-[60px] pointer-events-none"></div>
                             <div className="relative z-10">
@@ -339,10 +373,11 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                                 <p className="text-[10px] text-blue-200 mt-1">+962 7 8887 7285</p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
