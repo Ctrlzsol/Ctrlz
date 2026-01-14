@@ -1,2 +1,3 @@
-// Redundant entry file. The application entry point is src/index.tsx as configured in index.html.
+// This file is cleared to prevent double-mounting conflicts on deployment.
+// The entry point is src/index.tsx as defined in index.html.
 export {};
