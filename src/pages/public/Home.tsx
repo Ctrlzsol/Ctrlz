@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Server, Wifi, ArrowUpRight, Cpu, Layers, Network } from 'lucide-react';
@@ -68,14 +67,14 @@ const Home = () => {
   const { t, dir } = useLanguage();
 
   return (
-    <div className="h-screen w-full bg-[#f5f5f7] font-sans selection:bg-[#0c2444] selection:text-white relative overflow-y-auto snap-y snap-mandatory scroll-smooth">
+    <div className="w-full bg-[#f5f5f7] font-sans selection:bg-[#0C2444] selection:text-white relative scroll-smooth">
       
       <div className="fixed inset-0 pointer-events-none z-0">
          <FloatingTechBackground />
       </div>
 
       {/* 1. HERO SECTION */}
-      <section className="relative h-screen snap-start flex flex-col items-center justify-center text-center px-4 z-10">
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 z-10">
         
         <motion.div
            initial={{ opacity: 0, y: 30 }}
@@ -116,14 +115,13 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* 2. THE ECOSYSTEM (Visual Diagram) - CREATIVE REDESIGN */}
-      <section className="h-screen snap-start flex flex-col justify-center py-20 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto relative z-10">
+      {/* 2. THE ECOSYSTEM (Visual Diagram) */}
+      <section className="min-h-screen flex flex-col justify-center py-20 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto relative z-10">
          <ScrollReveal>
              <div className="text-center mb-16">
                  <h2 className="text-5xl md:text-7xl font-bold text-[#0c2444] mb-4 tracking-tight leading-tight">
                     {t.home.canvasSection.title}
                  </h2>
-                 {/* Subtitle Removed as requested */}
              </div>
          </ScrollReveal>
 
@@ -229,12 +227,11 @@ const Home = () => {
          </div>
       </section>
 
-      {/* 3. FEATURES - MODERN REDESIGN */}
-      <section className="h-screen snap-start flex flex-col justify-center py-20 relative z-10">
+      {/* 3. FEATURES */}
+      <section className="min-h-screen flex flex-col justify-center py-20 relative z-10">
           <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <ScrollReveal>
                 <div className="text-center mb-20">
-                    {/* UPDATED: Removed gradient, used solid brand color */}
                     <h2 className="text-5xl md:text-7xl font-bold text-[#0c2444] mb-4 tracking-tight leading-tight">
                         {t.home.servicesTitle}
                     </h2>
@@ -276,7 +273,7 @@ const Home = () => {
       </section>
 
       {/* 4. CTA */}
-      <section className="h-screen snap-start flex flex-col justify-center py-20 px-4 text-center relative z-10 overflow-hidden">
+      <section className="min-h-screen flex flex-col justify-center py-20 px-4 text-center relative z-10 overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-50 rounded-full blur-[120px] pointer-events-none opacity-60"></div>
 
           <motion.div 
