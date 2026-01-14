@@ -61,7 +61,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
 
     const handleWhatsAppShare = () => {
         const confirmMsg = "لمشاركة التقرير كملف PDF، يجب أولاً تحميله (طباعة -> حفظ كـ PDF) ثم إرساله يدوياً عبر واتساب.\n\nهل ترغب بفتح واتساب الآن؟";
-        if (confirm.apply(null, [confirmMsg] as any)) {
+        if (window.confirm(confirmMsg)) {
              window.open(`https://wa.me/`, '_blank');
         }
     };
@@ -377,7 +377,7 @@ const ReportPrintModal: React.FC<{ report: Report; onClose: () => void }> = ({ r
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
