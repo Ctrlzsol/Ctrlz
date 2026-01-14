@@ -1,3 +1,2 @@
-// This file is intentionally left empty to prevent conflicts.
-// The primary application entry point is /src/index.tsx.
+// Redundant entry file. The application entry point is src/index.tsx as configured in index.html.
 export {};
