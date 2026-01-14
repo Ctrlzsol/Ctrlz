@@ -1,3 +1,3 @@
-// This file is cleared to prevent double-mounting conflicts on deployment.
-// The entry point is src/index.tsx as defined in index.html.
+// This file is intentionally left empty to prevent conflicts.
+// The primary application entry point is /src/index.tsx.
 export {};
